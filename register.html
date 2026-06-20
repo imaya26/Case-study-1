@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Passenger Registration</title>
+
+  <!-- ✅ Internal CSS (US005) -->
+  <style>
+    body {
+      background-color: teal;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: Arial;
+    }
+
+    .form-container {
+      width: 400px;
+      background-color: #f0f0f0; /* Gray94 */
+      color: black;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    input, textarea {
+      width: 100%;
+      margin: 8px 0;
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    textarea {
+      resize: none;
+      height: 60px;
+    }
+
+    .error {
+      color: red;
+      font-size: 13px;
+    }
+
+    button {
+      width: 48%;
+      padding: 10px;
+      margin-top: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .register-btn {
+      background: dodgerblue;
+      color: white;
+    }
+
+    .register-btn:hover {
+      background: #0047AB; /* Cobalt */
+    }
+
+    .reset-btn {
+      background: gray;
+      color: white;
+    }
+
+    /* Acknowledgment */
+    .success {
+      color: green;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .ack-box {
+      margin-top: 15px;
+      padding: 10px;
+      background: #fff;
+      border-radius: 5px;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div class="form-container">
+    <h2>Passenger Registration</h2>
+
+    <!-- Error Message -->
+    <div id="errorMsg" class="error"></div>
+
+    <form id="regForm">
+
+      <input type="text" id="firstName" placeholder="First Name (Max 50)">
+      <input type="text" id="lastName" placeholder="Last Name (Max 50)">
+      <input type="date" id="dob">
+      <input type="text" id="email" placeholder="Email ID">
+      <textarea id="address" maxlength="100" placeholder="Address (Max 100)"></textarea>
+      <input type="text" id="contact" placeholder="Contact Number">
+
+      <div style="display:flex; justify-content:space-between;">
+        <button type="button" class="register-btn" onclick="register()">Register</button>
+        <button type="button" class="reset-btn" onclick="resetForm()">Reset</button>
+      </div>
+
+    </form>
+
+    <!-- Acknowledgment -->
+    <div id="acknowledgment"></div>
+  </div>
+
+  <!-- ✅ External JS (US006) -->
+  <script src="register.js"></script>
+
+  <script>
+    // Redirect to home after successful registration
+    function redirectToHome() {
+      setTimeout(() => {
+        window.location.href = "home.html";
+      }, 2000);
+    }
+  </script>
+
+</body>
+</html>

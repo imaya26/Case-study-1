@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Airline Management System</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial;
+    }
+
+    body {
+      background-color: #f4f6f9;
+    }
+
+    /* ✅ NAVBAR */
+    .navbar {
+      background: teal;
+      color: white;
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: white;
+      margin: 0 12px;
+      text-decoration: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    .welcome {
+      font-weight: bold;
+    }
+
+    /* ✅ TITLE */
+    .title {
+      text-align: center;
+      margin: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      color: teal;
+    }
+
+    /* ✅ SEARCH FORM */
+    .search-box {
+      width: 500px;
+      margin: auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    }
+
+    select, input {
+      width: 100%;
+      padding: 8px;
+      margin: 8px 0;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: teal;
+      color: white;
+      border: none;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    button:hover {
+      background: black;
+    }
+
+    .edit-btn {
+      width: 48%;
+      background: dodgerblue;
+      margin-right: 5px;
+    }
+
+    .edit-btn:hover {
+      background: #0047AB;
+    }
+
+    .save-btn {
+      width: 48%;
+      background: green;
+    }
+
+    .save-btn:hover {
+      background: darkgreen;
+    }
+
+    /* ✅ SECTIONS (Profile / Trips) */
+    .section {
+      display: none;
+      width: 80%;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px gray;
+    }
+
+    .profile-field {
+      margin: 10px 0;
+      display: flex;
+      gap: 10px;
+    }
+
+    .profile-field label {
+      width: 150px;
+      font-weight: bold;
+    }
+
+    .profile-field input, .profile-field textarea {
+      flex: 1;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .profile-field input:disabled, .profile-field textarea:disabled {
+      background-color: #f0f0f0;
+      cursor: not-allowed;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    table, th, td {
+      border: 1px solid gray;
+      padding: 8px;
+      text-align: center;
+    }
+
+    .links a {
+      margin: 10px;
+      cursor: pointer;
+      color: teal;
+      font-weight: bold;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ✅ NAVBAR -->
+  <div class="navbar">
+    <div class="nav-links">
+      <a onclick="showHome()">Home</a>
+      <a onclick="showProfile()">My Profile</a>
+      <a onclick="showTrips()">My Trips</a>
+      <a onclick="logout()">Logout</a>
+    </div>
+
+    <div class="welcome">
+      Welcome <span id="passengerName">Passenger</span> !!!
+    </div>
+  </div>
+
+  <!-- ✅ TITLE -->
+  <div class="title">Airline Management System</div>
+
+  <!-- ✅ SEARCH FORM (HOME) -->
+  <div id="homeSection" class="search-box">
+    <h3>Search Flights</h3>
+
+    <select id="origin">
+      <option value="">Select Origin</option>
+      <option value="Chennai">Chennai</option>
+      <option value="Delhi">Delhi</option>
+      <option value="Mumbai">Mumbai</option>
+      <option value="Bangalore">Bangalore</option>
+      <option value="Kolkata">Kolkata</option>
+      <option value="Hyderabad">Hyderabad</option>
+    </select>
+
+    <select id="destination">
+      <option value="">Select Destination</option>
+      <option value="Bangalore">Bangalore</option>
+      <option value="Kolkata">Kolkata</option>
+      <option value="Hyderabad">Hyderabad</option>
+      <option value="Chennai">Chennai</option>
+      <option value="Delhi">Delhi</option>
+      <option value="Mumbai">Mumbai</option>
+    </select>
+
+    <input type="date" id="departure">
+
+    <input type="number" id="travelers" placeholder="No of Travellers" min="1">
+
+    <select id="class">
+      <option value="">Select Class</option>
+      <option value="Economy">Economy</option>
+      <option value="Executive">Executive</option>
+      <option value="Business">Business</option>
+    </select>
+
+    <button onclick="searchFlights()">Search</button>
+  </div>
+
+  <!-- ✅ PROFILE SECTION -->
+  <div id="profileSection" class="section">
+    <h3>My Profile</h3>
+
+    <div class="profile-field">
+      <label>First Name:</label>
+      <input type="text" id="pfirstName" disabled>
+    </div>
+
+    <div class="profile-field">
+      <label>Last Name:</label>
+      <input type="text" id="plastName" disabled>
+    </div>
+
+    <div class="profile-field">
+      <label>Date of Birth:</label>
+      <input type="date" id="pdob" disabled>
+    </div>
+
+    <div class="profile-field">
+      <label>Email:</label>
+      <input type="text" id="pemail" disabled>
+    </div>
+
+    <div class="profile-field">
+      <label>Address:</label>
+      <textarea id="paddress" disabled></textarea>
+    </div>
+
+    <div class="profile-field">
+      <label>Contact Number:</label>
+      <input type="text" id="pcontact" disabled>
+    </div>
+
+    <div class="profile-field">
+      <label>Passenger ID:</label>
+      <input type="text" id="ppassengerId" disabled>
+    </div>
+
+    <div style="display:flex; justify-content:center; gap:10px; margin-top:15px;">
+      <button class="edit-btn" onclick="editProfile()">Edit</button>
+      <button class="save-btn" onclick="saveProfile()" style="display:none;" id="saveBtn">Save</button>
+    </div>
+  </div>
+
+  <!-- ✅ TRIPS SECTION -->
+  <div id="tripSection" class="section">
+    <h3>My Trips</h3>
+
+    <div class="links">
+      <a onclick="showTripTable('upcoming')">Upcoming</a>
+      <a onclick="showTripTable('cancelled')">Cancelled</a>
+      <a onclick="showTripTable('completed')">Completed</a>
+    </div>
+
+    <div id="tripTable"></div>
+  </div>
+
+  <!-- ✅ JS -->
+  <script>
+    // Load passenger data on page load
+    window.addEventListener("load", function() {
+      loadPassengerData();
+      showHome();
+    });
+
+    function loadPassengerData() {
+      const loggedInUser = sessionStorage.getItem("loggedInUser");
+      const passengerData = sessionStorage.getItem("passengerData");
+
+      if (loggedInUser) {
+        document.getElementById("passengerName").textContent = loggedInUser;
+      }
+
+      if (passengerData) {
+        const data = JSON.parse(passengerData);
+        document.getElementById("pfirstName").value = data.firstName || "";
+        document.getElementById("plastName").value = data.lastName || "";
+        document.getElementById("pdob").value = data.dob || "";
+        document.getElementById("pemail").value = data.email || "";
+        document.getElementById("paddress").value = data.address || "";
+        document.getElementById("pcontact").value = data.contact || "";
+        document.getElementById("ppassengerId").value = data.passengerId || "";
+      }
+    }
+
+    function editProfile() {
+      const fields = ["pfirstName", "plastName", "pdob", "pemail", "paddress", "pcontact"];
+      fields.forEach(id => {
+        document.getElementById(id).disabled = false;
+      });
+      document.querySelector(".edit-btn").style.display = "none";
+      document.getElementById("saveBtn").style.display = "inline-block";
+    }
+
+    function saveProfile() {
+      const fname = document.getElementById("pfirstName").value.trim();
+      const lname = document.getElementById("plastName").value.trim();
+      const dob = document.getElementById("pdob").value;
+      const email = document.getElementById("pemail").value.trim();
+      const address = document.getElementById("paddress").value.trim();
+      const contact = document.getElementById("pcontact").value.trim();
+
+      // Basic validation
+      if (!fname || !lname || !dob || !email || !address || !contact) {
+        alert("All fields are mandatory");
+        return;
+      }
+
+      if (contact.length !== 10 || !/^[0-9]{10}$/.test(contact)) {
+        alert("Enter a valid contact number");
+        return;
+      }
+
+      // Update stored data
+      const passengerData = JSON.parse(sessionStorage.getItem("passengerData"));
+      passengerData.firstName = fname;
+      passengerData.lastName = lname;
+      passengerData.dob = dob;
+      passengerData.email = email;
+      passengerData.address = address;
+      passengerData.contact = contact;
+
+      sessionStorage.setItem("passengerData", JSON.stringify(passengerData));
+      sessionStorage.setItem("loggedInUser", fname + " " + lname);
+      document.getElementById("passengerName").textContent = fname + " " + lname;
+
+      // Disable fields again
+      const fields = ["pfirstName", "plastName", "pdob", "pemail", "paddress", "pcontact"];
+      fields.forEach(id => {
+        document.getElementById(id).disabled = true;
+      });
+      document.querySelector(".edit-btn").style.display = "inline-block";
+      document.getElementById("saveBtn").style.display = "none";
+
+      alert("Profile Updated Successfully");
+    }
+
+    function showHome() {
+      document.getElementById("homeSection").style.display = "block";
+      document.getElementById("profileSection").style.display = "none";
+      document.getElementById("tripSection").style.display = "none";
+    }
+
+    function showProfile() {
+      document.getElementById("homeSection").style.display = "none";
+      document.getElementById("profileSection").style.display = "block";
+      document.getElementById("tripSection").style.display = "none";
+    }
+
+    function showTrips() {
+      document.getElementById("homeSection").style.display = "none";
+      document.getElementById("profileSection").style.display = "none";
+      document.getElementById("tripSection").style.display = "block";
+    }
+
+    function logout() {
+      sessionStorage.clear();
+      window.location.href = "login.html";
+    }
+
+    function searchFlights() {
+      const origin = document.getElementById("origin").value;
+      const destination = document.getElementById("destination").value;
+      const departure = document.getElementById("departure").value;
+      const travelers = document.getElementById("travelers").value;
+      const classType = document.getElementById("class").value;
+
+      if (!origin || !destination || !departure || !travelers || !classType) {
+        alert("Please fill all fields");
+        return;
+      }
+
+      alert(`Searching flights from ${origin} to ${destination} on ${departure} for ${travelers} traveller(s) in ${classType} class`);
+    }
+
+    function showTripTable(type) {
+      let data = '';
+
+      if (type === "upcoming") {
+        data = `
+          <tr><th>Flight</th><th>Origin</th><th>Destination</th><th>Date</th><th>Price</th></tr>
+          <tr><td>AI101</td><td>Chennai</td><td>Delhi</td><td>10-07-2026</td><td>₹5000</td></tr>
+          <tr><td>AI202</td><td>Mumbai</td><td>Kolkata</td><td>12-07-2026</td><td>₹4500</td></tr>
+          <tr><td>AI303</td><td>Delhi</td><td>Bangalore</td><td>15-07-2026</td><td>₹6000</td></tr>
+        `;
+      }
+
+      if (type === "cancelled") {
+        data = `
+          <tr><th>Flight</th><th>Origin</th><th>Destination</th><th>Date</th><th>Price</th></tr>
+          <tr><td>AI111</td><td>Chennai</td><td>Mumbai</td><td>01-06-2026</td><td>₹4000</td></tr>
+          <tr><td>AI222</td><td>Delhi</td><td>Hyderabad</td><td>03-06-2026</td><td>₹3500</td></tr>
+          <tr><td>AI333</td><td>Kolkata</td><td>Chennai</td><td>05-06-2026</td><td>₹4200</td></tr>
+        `;
+      }
+
+      if (type === "completed") {
+        data = `
+          <tr><th>Flight</th><th>Origin</th><th>Destination</th><th>Date</th><th>Price</th></tr>
+          <tr><td>AI911</td><td>Bangalore</td><td>Delhi</td><td>20-05-2026</td><td>₹7000</td></tr>
+          <tr><td>AI922</td><td>Hyderabad</td><td>Mumbai</td><td>18-05-2026</td><td>₹5200</td></tr>
+          <tr><td>AI933</td><td>Chennai</td><td>Kolkata</td><td>15-05-2026</td><td>₹6100</td></tr>
+        `;
+      }
+
+      document.getElementById("tripTable").innerHTML =
+        `<table>${data}</table>`;
+    }
+  </script>
+
+</body>
+</html>
