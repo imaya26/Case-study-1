@@ -1,0 +1,150 @@
+1. Create Carrier Table
+
+CREATE TABLE Carrier (
+    CarrierId INT PRIMARY KEY AUTO_INCREMENT,
+    CarrierName VARCHAR(100),
+    DiscountPercentageThirtyDaysAdvanceBooking INT,
+    DiscountPercentageSixtyDaysAdvanceBooking INT,
+    DiscountPercentageNinteyDaysAdvanceBooking INT,
+    RefundPercentageForTicketCancellation2DaysBeforeTravelDate INT,
+    RefundPercentageForTicketCancellation10DaysBeforeTravelDate INT,
+    RefundPercentageForTicketCancellation20DaysBeforeTravelDate INT,
+    BulkBookingDiscount INT,
+    SilverUserDiscount INT,
+    GoldUserDiscount INT,
+    PlatinumUserDiscount INT
+);
+
+..............................................................................
+
+2. Insert Carrier Details
+
+INSERT INTO Carrier (
+    CarrierName,
+    DiscountPercentageThirtyDaysAdvanceBooking,
+    DiscountPercentageSixtyDaysAdvanceBooking,
+    DiscountPercentageNinteyDaysAdvanceBooking,
+    RefundPercentageForTicketCancellation2DaysBeforeTravelDate,
+    RefundPercentageForTicketCancellation10DaysBeforeTravelDate,
+    RefundPercentageForTicketCancellation20DaysBeforeTravelDate,
+    BulkBookingDiscount,
+    SilverUserDiscount,
+    GoldUserDiscount,
+    PlatinumUserDiscount
+) VALUES
+('Indigo', 5, 10, 15, 20, 40, 60, 10, 5, 10, 15),
+('Jet Airways', 7, 12, 18, 25, 45, 65, 12, 6, 12, 18),
+('Air India', 6, 11, 16, 22, 42, 62, 11, 7, 11, 16);
+
+...............................................................................
+
+3. Create Flight Table
+
+CREATE TABLE Flight (
+    FlightID INT PRIMARY KEY AUTO_INCREMENT,
+    CarrierID INT,
+    Origin VARCHAR(100),
+    Destination VARCHAR(100),
+    Airfare INT,
+    SeatCapacityEconomyClass INT,
+    SeatCapacityBusinessClass INT,
+    SeatCapacityExecutiveClass INT,
+    FOREIGN KEY (CarrierID) REFERENCES Carrier(CarrierId)
+);
+
+
+.................................................................................
+
+4. Insert Flight Details
+
+INSERT INTO Flight (
+    CarrierID, Origin, Destination, Airfare,
+    SeatCapacityEconomyClass, SeatCapacityBusinessClass, SeatCapacityExecutiveClass
+) VALUES
+(1, 'Chennai', 'Delhi', 5000, 120, 40, 20),
+(2, 'Mumbai', 'Bangalore', 4500, 100, 30, 15),
+(3, 'Hyderabad', 'Kolkata', 5500, 110, 35, 18);
+
+......................................................................................
+
+5. Count Flights per Carrier
+
+SELECT c.CarrierName, COUNT(f.FlightID) AS FlightCount
+FROM Carrier c
+LEFT JOIN Flight f ON c.CarrierId = f.CarrierID
+GROUP BY c.CarrierName
+ORDER BY FlightCount ASC;
+
+......................................................................................
+
+6. Lowest Airfare for a Route
+
+SELECT f.FlightID, c.CarrierName, f.Origin, f.Destination, f.Airfare
+FROM Flight f
+JOIN Carrier c ON f.CarrierID = c.CarrierId
+WHERE f.Origin = 'Chennai' AND f.Destination = 'Delhi'
+ORDER BY f.Airfare ASC
+LIMIT 1;
+
+......................................................................................
+
+7. Search Flight with Available Seats
+
+SELECT f.FlightID, c.CarrierName, f.Origin, f.Destination, f.Airfare,
+       (f.SeatCapacityEconomyClass - fs.BookedEconomySeats) AS AvailableEconomySeats,
+       (f.SeatCapacityBusinessClass - fs.BookedBusinessSeats) AS AvailableBusinessSeats,
+       (f.SeatCapacityExecutiveClass - fs.BookedExecutiveSeats) AS AvailableExecutiveSeats
+FROM Flight f
+JOIN Carrier c ON f.CarrierID = c.CarrierId
+JOIN FlightSchedule fs ON f.FlightID = fs.FlightID
+WHERE f.Origin = 'Chennai' AND f.Destination = 'Delhi';
+
+.......................................................................................
+
+8. Insert Flight Booking
+
+INSERT INTO FlightBooking (
+    BookingID, FlightID, CustomerID, BookingDate, TravelDate, Status
+) VALUES
+(1, 101, 501, '2026-06-20', '2026-07-01', 'Booked');
+
+..........................................................................................
+
+9. Cancel Flight Booking
+
+UPDATE FlightBooking
+SET Status = 'Cancelled'
+WHERE BookingID = 1;
+
+UPDATE FlightSchedule
+SET BookedEconomySeats = BookedEconomySeats - 1
+WHERE FlightID = 101 AND TravelDate = '2026-07-01';
+
+..........................................................................................
+
+10. Remove Flights by Carrier and Destination
+
+DELETE FROM Flight
+WHERE CarrierID = 2 AND Destination = 'Bangalore';
+
+.........................................................................................
+
+11. View Carriers on a Route
+
+SELECT DISTINCT c.CarrierName
+FROM Flight f
+JOIN Carrier c ON f.CarrierID = c.CarrierId
+WHERE f.Origin = 'Chennai' AND f.Destination = 'Delhi';
+
+.........................................................................................
+
+12. Update Airfare with Condition
+
+UPDATE Flight f
+JOIN Carrier c ON f.CarrierID = c.CarrierId
+SET f.Airfare = f.Airfare * 1.10
+WHERE f.Origin = 'Chennai' AND f.Destination = 'Delhi'
+  AND c.DiscountPercentageThirtyDaysAdvanceBooking > 3;
+
+...........................................................................................
+
